@@ -10,9 +10,18 @@ cases = [
     ("dxf", ["sample_plan.dxf", "--html"], [39.44, 12.54, 12.54]),
     ("pdf", ["sample_plan.pdf", "--ref", "28.3465", "1.0"], [39.44, 12.54, 12.54]),
     ("png", ["sample_plan.png", "--scale", "0.02"], [39.44, 12.54, 12.54]),
+    ("png-ref", ["sample_plan.png", "--ref", "511", "10.2"], [39.44, 12.54, 12.54]),
     ("svg", ["sample_profile.svg", "--kind", "profile", "--height", "0.005", "--scale", "0.001"], None),
 ]
 ok = True
+m = subprocess.run([sys.executable, conv, os.path.join(samples, "sample_plan.png"), "--measure"], capture_output=True, text=True)
+try:
+    mw = json.loads(m.stdout)["width"]
+    good = abs(mw - 511) <= 3
+except Exception:
+    mw, good = m.stderr.strip()[-200:], False
+print(f"[{'PASS' if good else 'FAIL'}] measure: sample_plan.png width {mw} px (expected ~511)")
+ok &= good
 for tag, args, rooms in cases:
     d = os.path.join(out, tag)
     args = [os.path.join(samples, args[0])] + args[1:]

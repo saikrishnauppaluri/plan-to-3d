@@ -31,7 +31,11 @@ Decide which kind it is, or ask only if you truly cannot tell:
 ## 2. Get the scale (never guess it)
 
 - **DXF**: units come from the file's `$INSUNITS`. If it has none, the converter assumes metres and says so; check the report's size looks plausible.
-- **Vector PDF, SVG, PNG/JPG**: the converter needs a scale. Ask the user for one known dimension (for example "the front wall is 10 m"), measure that length in drawing units (PDF points, SVG px, or image pixels), then pass `--ref <units> <metres>`. If the drawing states a scale (for example 1:100 on an A-series sheet), `--scale` is metres per drawing unit (1:100 in PDF points = 0.0352778).
+- **Vector PDF, SVG, PNG/JPG**: the converter needs a scale. Unless the drawing states one, stop and ask the user for one known dimension (for example "the long outside wall is 10.2 m") before building. Then measure that length in drawing units (PDF points, SVG px, or image pixels):
+  ```bash
+  .venv/bin/python scripts/plan_to_3d.py <drawing> --measure   # prints overall width and height in drawing units
+  ```
+  For an overall outside dimension, use the printed width or height directly for images (they include the wall faces); for single-line vector drawings subtract one wall thickness from the real length, because lines are wall centrelines. Then pass `--ref <units> <metres>`. Example: a PNG measuring 511 px wide whose long wall is 10.2 m becomes `--ref 511 10.2`. If the drawing states a scale (for example 1:100 on an A-series sheet), `--scale` is metres per drawing unit (1:100 in PDF points = 0.0352778).
 - **Scans, photos, hand sketches**: warn that the result will be rough.
 - **DWG**: not supported directly. Ask the user to export DXF (AutoCAD: Save As > DXF).
 
@@ -44,7 +48,7 @@ Ask at most one question per drawing, and only when the answer changes the model
     [--scale M_PER_UNIT | --ref UNITS METRES] [--layer NAME] [--door-gap M] [--html] --out <dir>
 ```
 
-Outputs in `<dir>`, named after the input:
+Write `--out` to a working folder outside the skill directory (for example next to the user's file). Outputs in `<dir>`, named after the input:
 
 - `.glb`: opens in a browser, Windows 3D Viewer, and most AR viewers (Y-up)
 - `.stl`: 3D printing (Z-up, metres)
@@ -69,7 +73,7 @@ Outputs in `<dir>`, named after the input:
 
 ## 6. Reply
 
-Send the files, the preview, and a short summary: overall size, wall length, footprint area, wall volume, the area of each room, and the material estimate. Say in one line which file to use for what. List every assumption (for example "3 m wall height assumed"). Label every quantity **approximate, for planning only**.
+Send the files, the preview, and a short summary: overall size, wall centreline length, wall footprint area (`footprint_area_m2` is the floor area covered by the walls themselves, not the building's floor area), wall volume, the area of each room, and the material estimate. Say in one line which file to use for what. List every assumption (for example "3 m wall height assumed"). Label every quantity **approximate, for planning only**.
 
 ## Limits (say so in one line if asked)
 

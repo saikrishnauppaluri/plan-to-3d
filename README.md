@@ -30,13 +30,14 @@ assets/logo.svg, assets/logo.png  logo
    python3 -m venv .venv && .venv/bin/pip install -r scripts/requirements.txt
    .venv/bin/python scripts/selftest.py
    ```
-   Expected: `PASS` for dxf, pdf, png and svg, then `ALL PASS`. The sample plan is 10 m × 7 m with three rooms, and the test checks the room areas (39.4, 12.5 and 12.5 m²) within 3%, that every mesh is watertight, and that all output files are written.
+   Expected: `PASS` for measure, dxf, pdf, png, png-ref and svg, then `ALL PASS`. The sample plan is 10 m × 7 m with three rooms, and the test checks the room areas (about 39.4, 12.5 and 12.5 m²) within 3%, that every mesh is watertight, and that all output files are written.
 3. In the agent, attach `skills/plan-to-3d/samples/sample_plan.dxf` and ask: *"Turn this floor plan into a 3D model."* The agent should return GLB, STL, OBJ, STEP and a preview, report a 10.2 × 7.2 × 3.0 m model with three rooms (about 39.3, 12.5 and 12.5 m²), and state the 3 m wall height and 0.20 m wall thickness it assumed.
-4. Attach `sample_plan.png` and ask the same. The agent should ask for one known dimension (for example the front wall is 10 m wide) before building.
+4. Attach `sample_plan.png` and ask the same. The agent should ask for one known dimension before building. Reply "the long wall is 10.2 m"; the agent measures the image with `--measure` (511 px), builds with `--ref 511 10.2`, and reports about 10.2 × 7.2 × 3.0 m with rooms of about 39.0, 12.4 and 12.3 m².
 
 Manual run:
 
 ```bash
+.venv/bin/python scripts/plan_to_3d.py samples/sample_plan.png --measure      # drawing size in px, for --ref
 .venv/bin/python scripts/plan_to_3d.py samples/sample_plan.dxf --html --out out
 .venv/bin/python scripts/plan_to_3d.py samples/sample_plan.png --scale 0.02 --out out
 .venv/bin/python scripts/plan_to_3d.py samples/sample_profile.svg --kind profile --height 0.005 --scale 0.001 --out out

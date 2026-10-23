@@ -250,7 +250,35 @@ def main():
     ap.add_argument("--name", default=None)
     ap.add_argument("--html", action="store_true", help="also write a single-file HTML 3D viewer")
     ap.add_argument("--no-step", action="store_true")
+    ap.add_argument("--measure", action="store_true", help="print the drawing's overall width and height in drawing units (image px, PDF points, SVG px, DXF units) and exit; use it to turn one known dimension into --ref")
     a = ap.parse_args()
+
+    if a.measure:
+        ext = os.path.splitext(a.input)[1].lower()
+        if ext in (".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff"):
+            import cv2
+            g = cv2.imread(a.input, cv2.IMREAD_GRAYSCALE)
+            if g is None:
+                raise SystemExit(f"Cannot read image {a.input}")
+            _, b = cv2.threshold(g, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+            ys, xs = np.nonzero(b)
+            w, h, unit = int(xs.max() - xs.min() + 1), int(ys.max() - ys.min() + 1), "px"
+            hint = "outer edge to outer edge of the ink (wall faces included). If the known dimension is the overall outside length, pass --ref <width or height> <metres>."
+        else:
+            if ext == ".dxf":
+                lines, _, _ = read_dxf(a.input, a.layer); unit = "DXF units"
+            elif ext == ".pdf":
+                lines, _, _ = read_pdf(a.input); unit = "PDF points"
+            elif ext == ".svg":
+                lines, _, _ = read_svg(a.input); unit = "SVG px"
+            else:
+                raise SystemExit(f"Unsupported input type {ext}")
+            pts = np.array([pt for l in lines for pt in l], dtype=float)
+            w, h = (pts.max(0) - pts.min(0)).round(3).tolist()
+            hint = "extent of the drawn lines (wall centrelines for single-line plans; the model adds one --wall thickness overall). If the known dimension is the overall outside length, subtract one wall thickness before using it in --ref."
+        print(json.dumps({"input": os.path.basename(a.input), "width": w, "height": h, "units": unit,
+                          "hint": hint}))
+        return
 
     ext = os.path.splitext(a.input)[1].lower()
     name = a.name or os.path.splitext(os.path.basename(a.input))[0]

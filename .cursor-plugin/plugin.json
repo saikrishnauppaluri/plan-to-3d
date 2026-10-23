@@ -2,7 +2,7 @@
   "name": "plan-to-3d",
   "displayName": "Plan to 3D",
   "description": "Turn 2D drawings (DXF, vector PDF, SVG, PNG/JPG floor plans, site plans and part profiles) into 3D models: GLB, STL, OBJ and STEP, plus a preview image, an optional browser viewer, and an approximate quantity report.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": { "name": "Sai Krishna Uppaluri", "email": "krishna.ceo@visnetai.co" },
   "publisher": "ViSNET AI",
   "homepage": "https://visnetai.co",
