@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#0F2742"/>
+  <!-- 2D plan (left, flat blueprint lines) -->
+  <g fill="none" stroke="#6FB7FF" stroke-width="14" stroke-linecap="square">
+    <path d="M150 300 H420 V560 H150 Z"/>
+    <path d="M300 300 V390 M300 450 V560 M300 430 H420"/>
+  </g>
+  <!-- arrow -->
+  <path d="M455 430 H545" stroke="#F5A524" stroke-width="18" stroke-linecap="round"/>
+  <path d="M530 395 L575 430 L530 465" fill="none" stroke="#F5A524" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 3D extruded plan (right, isometric) -->
+  <g stroke="#0F2742" stroke-width="4" stroke-linejoin="round">
+    <!-- floor -->
+    <path d="M610 470 L760 395 L910 470 L760 545 Z" fill="#1E4A75"/>
+    <!-- back walls -->
+    <path d="M610 470 L760 395 L760 315 L610 390 Z" fill="#CFE6FF"/>
+    <path d="M760 395 L910 470 L910 390 L760 315 Z" fill="#A9D2FF"/>
+    <!-- partition -->
+    <path d="M685 432 L835 507 L835 427 L685 352 Z" fill="#EAF4FF" opacity="0.95"/>
+    <!-- front walls -->
+    <path d="M610 470 L760 545 L760 465 L610 390 Z" fill="#8EC3FF" opacity="0.55"/>
+    <path d="M760 545 L910 470 L910 390 L760 465 Z" fill="#6FB7FF" opacity="0.55"/>
+  </g>
+  <text x="512" y="745" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="120" font-weight="700" fill="#FFFFFF">Plan to 3D</text>
+  <text x="512" y="835" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="54" font-weight="500" fill="#F5A524" letter-spacing="4">by ViSNET AI</text>
+</svg>

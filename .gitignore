@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.pyc
+plan-to-3d-selftest/
+out/
